@@ -12,15 +12,6 @@ import java.util.Collections;
  */
 public class ArrayListSorter {
     private static final int THRESHOLD = 5;
-
-    public static void main(String[] args) {
-        ArrayList<Integer> intList = new ArrayList<>();
-        Integer[] tempArr = new Integer[] { 4, 3, 2, 1, 5, 3, 7, 3, 9 };
-        intList.addAll(Arrays.asList(tempArr));
-        mergesort(intList);
-        System.out.println(intList.toString());
-    }
-
     /**
      * Driver method for mergesort, calls insertion sort if list size is below
      * threshold
@@ -31,7 +22,8 @@ public class ArrayListSorter {
         if (arr.size() <= THRESHOLD) {
             insertionSort(arr);
         } else {
-            mergesortRecursive(arr, 0, arr.size() - 1);
+            ArrayList<T> temp = new ArrayList<>();
+            mergesortRecursive(arr, temp,  0, arr.size() - 1);
         }
     }
 
@@ -43,15 +35,15 @@ public class ArrayListSorter {
      * @param low
      * @param high
      */
-    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr, int low, int high) {
+    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr,ArrayList<T> temp, int low, int high) {
         if (low >= high)
             return;
 
         int mid = low + (high - low) / 2;
-        mergesortRecursive(arr, low, mid);
-        mergesortRecursive(arr, mid + 1, high);
+        mergesortRecursive(arr, temp, low, mid);
+        mergesortRecursive(arr, temp, mid + 1, high);
 
-        merge(arr, low, mid, high);
+        merge(arr, temp, low, mid, high);
     }
 
     /**
@@ -62,11 +54,10 @@ public class ArrayListSorter {
      * @param mid
      * @param high
      */
-    public static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, int low, int mid, int high) {
+    public static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> temp, int low, int mid, int high) {
         int i = low;
         int j = mid + 1;
-        ArrayList<T> temp = new ArrayList<>(high - low);
-
+        temp = new ArrayList<T>();
         while (i <= mid && j <= high) {
             if (arr.get(i).compareTo(arr.get(j)) < 0)
                 temp.add(arr.get(i++));
