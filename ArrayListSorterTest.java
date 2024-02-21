@@ -4,8 +4,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+/**
+ * Testing class for ArrayListSorter
+ * 
+ * @author Alex Dean and Archer Fox
+ * @version 2/21/2024
+ */
 public class ArrayListSorterTest {
     ArrayList<Integer> intList = new ArrayList<>();
     ArrayList<Integer> intListSorted = new ArrayList<>();
@@ -27,7 +34,6 @@ public class ArrayListSorterTest {
 
         intListOne.add(6);
         
-        
         listBelowThreshold = new ArrayList<>();
         Integer[] newArr = new Integer[]{1,4,3,2};
         listBelowThreshold.addAll(Arrays.asList(newArr));
@@ -46,9 +52,19 @@ public class ArrayListSorterTest {
     }
 
     @Test
-    public void testPivotFinder() {
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(new Integer[]{2,1,3}));
-        assertEquals(0, ArrayListSorter.findPivot(list, 0, list.size() - 1));
+    public void testMedianPivot() {
+        assertEquals(4, ArrayListSorter.medianPivot(intList, 0, intList.size() - 1));
+    }
+
+    @Test
+    public void testMiddlePivot() {
+        assertEquals(4, ArrayListSorter.middlePivot(intList, 0, intList.size() - 1));
+    }
+
+    @Test
+    public void testRandomPivot() {
+        int piv = ArrayListSorter.randomPivot(intList, 0, intList.size() - 1);
+        assertTrue(piv >= 0 && piv <= intList.size() - 1);
     }
 
     @Test 
@@ -71,6 +87,26 @@ public class ArrayListSorterTest {
     @Test
     public void testQuickSortOneItem() { 
         ArrayListSorter.quicksort(intListOne);
+    }
+
+    @Test
+    public void testMergeSortTwoItems() {
+        ArrayList<Integer> test = new ArrayList<>();
+        test.add(9);
+        test.add(2);
+        ArrayListSorter.mergesort(test);
+        assertEquals(2, test.get(0));
+        assertEquals(9, test.get(1));
+    }
+
+    @Test
+    public void testQuickSortTwoItems() {
+        ArrayList<Integer> test = new ArrayList<>();
+        test.add(9);
+        test.add(2);
+        ArrayListSorter.quicksort(test);
+        assertEquals(2, test.get(0));
+        assertEquals(9, test.get(1));
     }
 
     @Test
