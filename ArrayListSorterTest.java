@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Testing class for ArrayListSorter
@@ -22,32 +23,33 @@ public class ArrayListSorterTest {
     ArrayList<String> stringListSorted = new ArrayList<>();
     ArrayList<Integer> listBelowThreshold = new ArrayList<>();
     ArrayList<Integer> listBelowThresholdSorted = new ArrayList<>();
+
     @BeforeEach
     void setup() {
         intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{4,3,2,1,5,3,7,3,9};
+        Integer[] intArr = new Integer[] { 4, 3, 2, 1, 5, 3, 7, 3, 9 };
         intList.addAll(Arrays.asList(intArr));
 
         intListSorted = new ArrayList<>();
-        Integer[] sortedArr = new Integer[]{1,2,3,3,3,4,5,7,9};
+        Integer[] sortedArr = new Integer[] { 1, 2, 3, 3, 3, 4, 5, 7, 9 };
         intListSorted.addAll(Arrays.asList(sortedArr));
 
         intListOne.add(6);
-        
+
         listBelowThreshold = new ArrayList<>();
-        Integer[] newArr = new Integer[]{1,4,3,2};
+        Integer[] newArr = new Integer[] { 1, 4, 3, 2 };
         listBelowThreshold.addAll(Arrays.asList(newArr));
-        
+
         listBelowThresholdSorted = new ArrayList<>();
-        Integer[] sortedSmall = new Integer[]{1,2,3,4};
+        Integer[] sortedSmall = new Integer[] { 1, 2, 3, 4 };
         listBelowThresholdSorted.addAll(Arrays.asList(sortedSmall));
 
         stringList = new ArrayList<>();
-        String[] stringArr = new String[]{"hi", "bonjour", "hola", "ciao", "privyet", "guten tag"};
+        String[] stringArr = new String[] { "hi", "bonjour", "hola", "ciao", "privyet", "guten tag" };
         stringList.addAll(Arrays.asList(stringArr));
 
         stringListSorted = new ArrayList<>();
-        String[] sortedStringArr = new String[]{"bonjour", "ciao", "guten tag", "hi", "hola", "privyet"};
+        String[] sortedStringArr = new String[] { "bonjour", "ciao", "guten tag", "hi", "hola", "privyet" };
         stringListSorted.addAll(Arrays.asList(sortedStringArr));
     }
 
@@ -67,26 +69,28 @@ public class ArrayListSorterTest {
         assertTrue(piv >= 0 && piv <= intList.size() - 1);
     }
 
-    @Test 
-    public void testQuickSort(){
-        ArrayListSorter.quicksort(intList);
+    @Test
+    public void testQuickSort() {
+        ArrayListSorter.quicksortRecursive(intList, 0, intList.size() - 1);
         assertEquals(intListSorted, intList);
     }
 
     @Test
     public void testMergeSort() {
-        ArrayListSorter.mergesort(intList);
+        ArrayListSorter.mergesortRecursive(intList, new ArrayList<Integer>(Collections.nCopies(intList.size(), null)),
+                0, intList.size() - 1);
         assertEquals(intListSorted, intList);
     }
 
     @Test
-    public void testMergeSortOneItem() { 
-        ArrayListSorter.mergesort(intListOne);
+    public void testMergeSortOneItem() {
+        ArrayListSorter.mergesortRecursive(intListOne,
+                new ArrayList<Integer>(Collections.nCopies(intListOne.size(), null)), 0, intListOne.size() - 1);
     }
 
     @Test
-    public void testQuickSortOneItem() { 
-        ArrayListSorter.quicksort(intListOne);
+    public void testQuickSortOneItem() {
+        ArrayListSorter.quicksortRecursive(intListOne, 0, intListOne.size() - 1);
     }
 
     @Test
@@ -94,7 +98,8 @@ public class ArrayListSorterTest {
         ArrayList<Integer> test = new ArrayList<>();
         test.add(9);
         test.add(2);
-        ArrayListSorter.mergesort(test);
+        ArrayListSorter.mergesortRecursive(test, new ArrayList<Integer>(Collections.nCopies(test.size(), null)), 0,
+                test.size() - 1);
         assertEquals(2, test.get(0));
         assertEquals(9, test.get(1));
     }
@@ -104,181 +109,172 @@ public class ArrayListSorterTest {
         ArrayList<Integer> test = new ArrayList<>();
         test.add(9);
         test.add(2);
-        ArrayListSorter.quicksort(test);
+        ArrayListSorter.quicksortRecursive(test, 0, test.size() - 1);
         assertEquals(2, test.get(0));
         assertEquals(9, test.get(1));
     }
 
     @Test
     public void testQuickSortEmpty() {
-        ArrayListSorter.quicksort(emptyList);
+        ArrayListSorter.quicksortRecursive(emptyList, 0, emptyList.size() - 1);
         assertEquals(new ArrayList<Integer>(), emptyList);
     }
 
     @Test
     public void testMergeSortEmpty() {
-        ArrayListSorter.mergesort(emptyList);
+        ArrayListSorter.mergesortRecursive(emptyList,
+                new ArrayList<Integer>(Collections.nCopies(emptyList.size(), null)), 0, emptyList.size() - 1);
         assertEquals(new ArrayList<Integer>(), emptyList);
     }
 
     @Test
     public void testQuickSortString() {
-        ArrayListSorter.quicksort(stringList);
+        ArrayListSorter.quicksortRecursive(stringList, 0, stringList.size() - 1);
         assertEquals(stringListSorted, stringList);
     }
 
     @Test
     public void testMergeSortString() {
-        ArrayListSorter.mergesort(stringList);
+        ArrayListSorter.mergesortRecursive(stringList,
+                new ArrayList<String>(Collections.nCopies(stringList.size(), null)), 0, stringList.size() - 1);
         assertEquals(stringListSorted, stringList);
     }
-    
+
     @Test
-    public void testGenerateAscending() { 
-    	ArrayList<Integer> list = ArrayListSorter.generateAscending(5);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1,2,3,4,5};
+    public void testGenerateAscending() {
+        ArrayList<Integer> list = ArrayListSorter.generateAscending(5);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1, 2, 3, 4, 5 };
         intList.addAll(Arrays.asList(intArr));
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
+
     @Test
-    public void testGenerateAscendingEmpty() { 
-    	ArrayList<Integer> list = ArrayListSorter.generateAscending(0);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{};
+    public void testGenerateAscendingEmpty() {
+        ArrayList<Integer> list = ArrayListSorter.generateAscending(0);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] {};
         intList.addAll(Arrays.asList(intArr));
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
+
     @Test
-    public void testGenerateDescendingEmpty() { 
-    	ArrayList<Integer> list = ArrayListSorter.generateDescending(0);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{};
+    public void testGenerateDescendingEmpty() {
+        ArrayList<Integer> list = ArrayListSorter.generateDescending(0);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] {};
         intList.addAll(Arrays.asList(intArr));
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
-    
+
     @Test
-    public void testGenerateDescending() { 
-    	ArrayList<Integer> list = ArrayListSorter.generateDescending(5);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{5,4,3,2,1};
+    public void testGenerateDescending() {
+        ArrayList<Integer> list = ArrayListSorter.generateDescending(5);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 5, 4, 3, 2, 1 };
         intList.addAll(Arrays.asList(intArr));
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
+
     @Test
-    public void testSortBelowThreshold() { 
-    	ArrayList<Integer> list = ArrayListSorter.generateDescending(5);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{5,4,3,2,1};
+    public void testSortBelowThreshold() {
+        ArrayList<Integer> list = ArrayListSorter.generateDescending(5);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 5, 4, 3, 2, 1 };
         intList.addAll(Arrays.asList(intArr));
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
-    @Test 
-    public void testMergeBelowThreshold() { 
-    	 ArrayListSorter.mergesort(listBelowThreshold);
-         assertEquals(listBelowThresholdSorted, listBelowThreshold);
+
+    @Test
+    public void testMergeBelowThreshold() {
+        ArrayListSorter.mergesort(listBelowThreshold);
+        assertEquals(listBelowThresholdSorted, listBelowThreshold);
     }
-    
-    @Test 
+
+    @Test
     public void testQuickSortPermuted() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(5);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1,2,3,4,5};
+        ArrayList<Integer> list = ArrayListSorter.generatePermuted(5);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1, 2, 3, 4, 5 };
         intList.addAll(Arrays.asList(intArr));
         ArrayListSorter.quicksort(list);
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
-    @Test 
+
+    @Test
     public void testMergeSortPermuted() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(5);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1,2,3,4,5};
+        ArrayList<Integer> list = ArrayListSorter.generatePermuted(5);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1, 2, 3, 4, 5 };
         intList.addAll(Arrays.asList(intArr));
         ArrayListSorter.mergesort(list);
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
-    @Test 
+
+    @Test
     public void testQuickSortPermutedLarge() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(15);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+        ArrayList<Integer> list = ArrayListSorter.generatePermuted(15);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
         intList.addAll(Arrays.asList(intArr));
         ArrayListSorter.quicksort(list);
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
-    @Test 
+
+    @Test
     public void testMergeSortPermutedLarge() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(15);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+        ArrayList<Integer> list = ArrayListSorter.generatePermuted(15);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
         intList.addAll(Arrays.asList(intArr));
         ArrayListSorter.mergesort(list);
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    
+
     @Test
-    public void testOneItemArrayQuick() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(1);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1};
+    public void testOneItemArrayPermuted() {
+        ArrayList<Integer> list = ArrayListSorter.generatePermuted(1);
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 1 };
         intList.addAll(Arrays.asList(intArr));
-        ArrayListSorter.quicksort(list);
-    	assertEquals(intList, list);
+        assertEquals(intList, list);
     }
-    @Test
-    public void testOneItemArrayMerge() {
-    	ArrayList<Integer> list = ArrayListSorter.generatePermuted(1);
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{1};
-        intList.addAll(Arrays.asList(intArr));
-        ArrayListSorter.mergesort(list);
-    	assertEquals(intList, list);
-    }
-    
+
     @Test
     public void testManyButOneSameItemQuick() {
-    	ArrayList<Integer> list = new ArrayList<>();
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{7,7,7,7,7,7,7,7,7,7,7,7,3,7,7,7};
-        Integer[] sortedIntArr = new Integer[]{3,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};
-   	 	list.addAll(Arrays.asList(intArr));
+        ArrayList<Integer> list = new ArrayList<>();
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 7, 7, 7 };
+        Integer[] sortedIntArr = new Integer[] { 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 };
+        list.addAll(Arrays.asList(intArr));
         intList.addAll(Arrays.asList(sortedIntArr));
-        ArrayListSorter.quicksort(list);
-    	assertEquals(intList, list);
+        ArrayListSorter.quicksortRecursive(list, 0, list.size() - 1);
+        assertEquals(intList, list);
     }
-    
+
     @Test
     public void testManyButOneSameItemMerge() {
-    	ArrayList<Integer> list = new ArrayList<>();
-    	intList = new ArrayList<>();
-        Integer[] intArr = new Integer[]{7,7,7,7,7,7,7,7,7,7,7,7,3,7,7,7};
-        Integer[] sortedIntArr = new Integer[]{3,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};
-   	 	list.addAll(Arrays.asList(intArr));
+        ArrayList<Integer> list = new ArrayList<>();
+        intList = new ArrayList<>();
+        Integer[] intArr = new Integer[] { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 7, 7, 7 };
+        Integer[] sortedIntArr = new Integer[] { 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 };
+        list.addAll(Arrays.asList(intArr));
         intList.addAll(Arrays.asList(sortedIntArr));
-        ArrayListSorter.mergesort(list);
-    	assertEquals(intList, list);
+        ArrayListSorter.mergesortRecursive(list, new ArrayList<Integer>(Collections.nCopies(list.size(), null)), 0,
+                list.size() - 1);
+        assertEquals(intList, list);
     }
-    
+
     @Test
     public void testManySameStrings() {
-    	ArrayList<String> list = new ArrayList<>();
-    	stringList = new ArrayList<>();
-        String[] intArr = new String[]{"hi", "hi" , "hi", "hi" , "bye" , "hi"};
-        String[] sortedIntArr = new String[]{"bye", "hi", "hi" , "hi", "hi"  , "hi"};
-   	 	list.addAll(Arrays.asList(intArr));
-   	 	stringList.addAll(Arrays.asList(sortedIntArr));
-        ArrayListSorter.mergesort(list);
-    	assertEquals(stringList, list);
+        ArrayList<String> list = new ArrayList<>();
+        stringList = new ArrayList<>();
+        String[] intArr = new String[] { "hi", "hi", "hi", "hi", "bye", "hi" };
+        String[] sortedIntArr = new String[] { "bye", "hi", "hi", "hi", "hi", "hi" };
+        list.addAll(Arrays.asList(intArr));
+        stringList.addAll(Arrays.asList(sortedIntArr));
+        ArrayListSorter.mergesortRecursive(list, new ArrayList<String>(Collections.nCopies(list.size(), null)), 0, list.size() - 1);
+        assertEquals(stringList, list);
     }
-    
-    
+
 }

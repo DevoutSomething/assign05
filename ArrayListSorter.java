@@ -1,7 +1,6 @@
 package assign05;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -20,15 +19,14 @@ public class ArrayListSorter {
      * 
      * @param arr
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> arr) {
         if (arr.size() <= THRESHOLD) {
             insertionSort(arr);
         } else {
-            // ArrayList<T> preallocatedList = new ArrayList<T>(Collections.nCopies(arr.size(), null));
-            T[] nullArr = (T[]) (new Comparable[arr.size()]);
-            ArrayList<T> preallocatedList = new ArrayList<>();
-            preallocatedList.addAll(Arrays.asList(nullArr));
+            ArrayList<T> preallocatedList = new ArrayList<>(Collections.nCopies(arr.size(), null));
+            // T[] nullArr = (T[]) (new Comparable[arr.size()]);
+            // ArrayList<T> preallocatedList = new ArrayList<>();
+            // preallocatedList.addAll(Arrays.asList(nullArr));
             mergesortRecursive(arr, preallocatedList, 0, arr.size() - 1);
         }
     }
@@ -41,7 +39,7 @@ public class ArrayListSorter {
      * @param low
      * @param high
      */
-    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr,
+    private static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr,
             ArrayList<T> preallocatedList, int low, int high) {
         if (low >= high)
             return;
@@ -61,7 +59,7 @@ public class ArrayListSorter {
      * @param mid
      * @param high
      */
-    public static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> preallocatedList, int low,
+    private static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> preallocatedList, int low,
             int mid, int high) {
         int i = low;
         int j = mid + 1;
@@ -159,7 +157,7 @@ public class ArrayListSorter {
      * @param right
      * @return median
      */
-    public static <T extends Comparable<? super T>> int medianPivot(ArrayList<T> arr, int left, int right) {
+    private static <T extends Comparable<? super T>> int medianPivot(ArrayList<T> arr, int left, int right) {
         T leftItem = arr.get(left);
         T middleItem = arr.get(left + (right - left) / 2);
         T rightItem = arr.get(right);
@@ -173,12 +171,12 @@ public class ArrayListSorter {
         }
     }
 
-    public static <T extends Comparable<? super T>> int randomPivot(ArrayList<T> arr, int left, int right) {
+    private static <T extends Comparable<? super T>> int randomPivot(ArrayList<T> arr, int left, int right) {
         Random rng = new Random();
         return rng.nextInt(left, right + 1);
     }
 
-    public static <T extends Comparable<? super T>> int middlePivot(ArrayList<T> arr, int left, int right) {
+    private static <T extends Comparable<? super T>> int middlePivot(ArrayList<T> arr, int left, int right) {
         return left + ((right - left) / 2);
     }
 
