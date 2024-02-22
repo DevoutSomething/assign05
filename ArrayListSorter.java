@@ -11,7 +11,7 @@ import java.util.Random;
  * @version 2/20/2024
  */
 public class ArrayListSorter {
-    private static final int THRESHOLD = 5;
+    private static final int THRESHOLD = 20;
 
     /**
      * Driver method for mergesort, calls insertion sort if list size is below
@@ -20,15 +20,9 @@ public class ArrayListSorter {
      * @param arr
      */
     public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> arr) {
-        if (arr.size() <= THRESHOLD) {
-            insertionSort(arr);
-        } else {
-            ArrayList<T> preallocatedList = new ArrayList<>(Collections.nCopies(arr.size(), null));
-            // T[] nullArr = (T[]) (new Comparable[arr.size()]);
-            // ArrayList<T> preallocatedList = new ArrayList<>();
-            // preallocatedList.addAll(Arrays.asList(nullArr));
-            mergesortRecursive(arr, preallocatedList, 0, arr.size() - 1);
-        }
+        // creates a list to be used for merging so that the list won't be re-initialized every time
+        ArrayList<T> preallocatedList = new ArrayList<>(Collections.nCopies(arr.size(), null));
+        mergesortRecursive(arr, preallocatedList, 0, arr.size() - 1);
     }
 
     /**
@@ -36,13 +30,16 @@ public class ArrayListSorter {
      * then begins merging them
      * 
      * @param arr
+     * @param preallocatedList list to hold temporary values
      * @param low
      * @param high
      */
     private static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr,
             ArrayList<T> preallocatedList, int low, int high) {
-        if (low >= high)
+        if (high - low <= THRESHOLD) {
+            insertionSort(arr, low, high);
             return;
+        }
 
         int mid = low + ((high - low) / 2);
         mergesortRecursive(arr, preallocatedList, low, mid);
@@ -55,11 +52,13 @@ public class ArrayListSorter {
      * Merges arrays in sorted order
      * 
      * @param arr
+     * @param preallocatedList list to hold temporary values
      * @param low
      * @param mid
      * @param high
      */
-    private static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> preallocatedList, int low,
+    private static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> preallocatedList,
+            int low,
             int mid, int high) {
         int i = low;
         int j = mid + 1;
@@ -88,11 +87,7 @@ public class ArrayListSorter {
      * @param arr
      */
     public static <T extends Comparable<? super T>> void quicksort(ArrayList<T> arr) {
-        if (arr.size() <= THRESHOLD) {
-            insertionSort(arr);
-        } else {
-            quicksortRecursive(arr, 0, arr.size() - 1);
-        }
+        quicksortRecursive(arr, 0, arr.size() - 1);
     }
 
     /**
@@ -107,7 +102,7 @@ public class ArrayListSorter {
         if (left >= right)
             return;
 
-        int pivotIndex = medianPivot(arr, left, right);
+        int pivotIndex = medianOfThreePivot(arr, left, right);
         int partitionIndex = partition(arr, left, right, pivotIndex);
 
         quicksortRecursive(arr, left, partitionIndex - 1);
@@ -157,7 +152,7 @@ public class ArrayListSorter {
      * @param right
      * @return median
      */
-    private static <T extends Comparable<? super T>> int medianPivot(ArrayList<T> arr, int left, int right) {
+    private static <T extends Comparable<? super T>> int medianOfThreePivot(ArrayList<T> arr, int left, int right) {
         T leftItem = arr.get(left);
         T middleItem = arr.get(left + (right - left) / 2);
         T rightItem = arr.get(right);
@@ -171,11 +166,27 @@ public class ArrayListSorter {
         }
     }
 
+    /**
+     * Returns a random index between left and right, inclusive
+     * 
+     * @param arr
+     * @param left
+     * @param right
+     * @return
+     */
     private static <T extends Comparable<? super T>> int randomPivot(ArrayList<T> arr, int left, int right) {
         Random rng = new Random();
         return rng.nextInt(left, right + 1);
     }
 
+    /**
+     * Returns the index in the middle of left and right
+     * 
+     * @param arr
+     * @param left
+     * @param right
+     * @return
+     */
     private static <T extends Comparable<? super T>> int middlePivot(ArrayList<T> arr, int left, int right) {
         return left + ((right - left) / 2);
     }
@@ -199,13 +210,13 @@ public class ArrayListSorter {
      * @param <T>
      * @param list
      */
-    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list) {
+    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list, int left, int right) {
         T temp;
         int j;
-        for (int i = 1; i < list.size(); i++) {
+        for (int i = left + 1; i <= right; i++) {
             temp = list.get(i);
             j = i - 1;
-            while (j >= 0 && list.get(j).compareTo(temp) > 0) {
+            while (j >= left && list.get(j).compareTo(temp) > 0) {
                 list.set(j + 1, list.get(j));
                 list.set(j--, temp);
             }

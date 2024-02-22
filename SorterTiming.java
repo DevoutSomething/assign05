@@ -24,8 +24,6 @@ public class SorterTiming {
 
         // This allows this thread to stabilize.
 
-        int ProblemSize = 100000;
-
         startTime = System.nanoTime();
 
         while (System.nanoTime() - startTime < 1000000000) { // empty block
@@ -37,14 +35,14 @@ public class SorterTiming {
         long timesToLoop = 1000;
 
         startTime = System.nanoTime();
-
-        for (double q = 1; q <= 20; q++) {
+        int q;
+        for (q = 1000; q <= 10000; q += 500) {
 
             for (long i = 0; i < timesToLoop; i++) {
 
-                ArrayList<Integer> temp = ArrayListSorter.generatePermuted(ProblemSize / 2);
+                ArrayList<Integer> temp = ArrayListSorter.generatePermuted(q);
 
-                ArrayListSorter.mergesort(temp);
+                ArrayListSorter.quicksort(temp);
 
             }
 
@@ -54,7 +52,7 @@ public class SorterTiming {
 
             for (long i = 0; i < timesToLoop; i++) {
                 @SuppressWarnings("unused")
-                ArrayList<Integer> temp = ArrayListSorter.generatePermuted(ProblemSize / 2);
+                ArrayList<Integer> temp = ArrayListSorter.generatePermuted(q);
             }
 
             stopTime = System.nanoTime();
@@ -67,7 +65,7 @@ public class SorterTiming {
 
             double averageTime = ((midpointTime - startTime) - (stopTime - midpointTime)) / timesToLoop;
 
-            System.out.print(averageTime + " " + (q / 2) * ProblemSize + "\n");
+            System.out.print(averageTime + " " + q + "\n");
         }
     }
 }

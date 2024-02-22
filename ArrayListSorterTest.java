@@ -55,7 +55,7 @@ public class ArrayListSorterTest {
 
     @Test
     public void testMedianPivot() {
-        assertEquals(4, ArrayListSorter.medianPivot(intList, 0, intList.size() - 1));
+        assertEquals(4, ArrayListSorter.medianOfThreePivot(intList, 0, intList.size() - 1));
     }
 
     @Test
