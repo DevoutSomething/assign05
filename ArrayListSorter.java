@@ -11,16 +11,16 @@ import java.util.Random;
  * @version 2/20/2024
  */
 public class ArrayListSorter {
-    private static final int THRESHOLD = 20;
+    private static final int THRESHOLD = 0;
 
     /**
-     * Driver method for mergesort, calls insertion sort if list size is below
-     * threshold
+     * Driver method for mergesort
      * 
      * @param arr
      */
     public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> arr) {
-        // creates a list to be used for merging so that the list won't be re-initialized every time
+        // creates a list to be used for merging so that the list won't be
+        // re-initialized every time
         ArrayList<T> preallocatedList = new ArrayList<>(Collections.nCopies(arr.size(), null));
         mergesortRecursive(arr, preallocatedList, 0, arr.size() - 1);
     }
@@ -35,35 +35,36 @@ public class ArrayListSorter {
      * @param high
      */
     private static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> arr,
-            ArrayList<T> preallocatedList, int low, int high) {
-        if (high - low <= THRESHOLD) {
-            insertionSort(arr, low, high);
+            ArrayList<T> preallocatedList, int left, int right) {
+        if (left >= right)
+            return;
+        if (right - left <= THRESHOLD) {
+            insertionSort(arr, left, right);
             return;
         }
 
-        int mid = low + ((high - low) / 2);
-        mergesortRecursive(arr, preallocatedList, low, mid);
-        mergesortRecursive(arr, preallocatedList, mid + 1, high);
+        int mid = left + ((right - left) / 2);
+        mergesortRecursive(arr, preallocatedList, left, mid);
+        mergesortRecursive(arr, preallocatedList, mid + 1, right);
 
-        merge(arr, preallocatedList, low, mid, high);
+        merge(arr, preallocatedList, left, mid, right);
     }
 
     /**
-     * Merges arrays in sorted order
+     * Merges two sublists in sorted order
      * 
      * @param arr
      * @param preallocatedList list to hold temporary values
-     * @param low
+     * @param left
      * @param mid
-     * @param high
+     * @param right
      */
     private static <T extends Comparable<? super T>> void merge(ArrayList<T> arr, ArrayList<T> preallocatedList,
-            int low,
-            int mid, int high) {
-        int i = low;
+            int left, int mid, int right) {
+        int i = left;
         int j = mid + 1;
         int tempIndex = 0;
-        while (i <= mid && j <= high) {
+        while (i <= mid && j <= right) {
             if (arr.get(i).compareTo(arr.get(j)) < 0)
                 preallocatedList.set(tempIndex, arr.get(i++));
             else
@@ -73,16 +74,15 @@ public class ArrayListSorter {
 
         while (i <= mid)
             preallocatedList.set(tempIndex++, arr.get(i++));
-        while (j <= high)
+        while (j <= right)
             preallocatedList.set(tempIndex++, arr.get(j++));
 
-        for (i = low; i <= high; i++)
-            arr.set(i, preallocatedList.get(i - low));
+        for (i = left; i <= right; i++)
+            arr.set(i, preallocatedList.get(i - left));
     }
 
     /**
-     * Driver method for quicksort, calls insertionsort if list size is below
-     * threshold
+     * Driver method for quicksort
      * 
      * @param arr
      */
@@ -92,7 +92,7 @@ public class ArrayListSorter {
 
     /**
      * Recursive method for quicksort, partitions around a pivot and then sorts the
-     * arrays to both sides in the same way
+     * arrays to both sides using quicksort recursively
      * 
      * @param arr
      * @param left
@@ -124,24 +124,17 @@ public class ArrayListSorter {
             int pivotIndex) {
 
         T pivot = arr.get(pivotIndex);
+        int pointer1 = left;
         swap(arr, pivotIndex, right);
-        int i = left;
-        int j = right - 1;
 
-        while (true) {
-            while (i < right && arr.get(i).compareTo(pivot) < 0)
-                i++;
-            while (j >= 0 && arr.get(j).compareTo(pivot) > 0)
-                j--;
-
-            if (i >= j)
-                break;
-
-            swap(arr, i++, j--);
+        for (int pointer2 = left; pointer2 < right; pointer2++) {
+            if (arr.get(pointer2).compareTo(pivot) < 0) {
+                swap(arr, pointer1++, pointer2);
+            }
         }
 
-        swap(arr, i, right);
-        return i;
+        swap(arr, pointer1, right);
+        return pointer1;
     }
 
     /**
@@ -150,7 +143,7 @@ public class ArrayListSorter {
      * @param arr
      * @param left
      * @param right
-     * @return median
+     * @return index of median
      */
     private static <T extends Comparable<? super T>> int medianOfThreePivot(ArrayList<T> arr, int left, int right) {
         T leftItem = arr.get(left);
@@ -172,7 +165,7 @@ public class ArrayListSorter {
      * @param arr
      * @param left
      * @param right
-     * @return
+     * @return random index
      */
     private static <T extends Comparable<? super T>> int randomPivot(ArrayList<T> arr, int left, int right) {
         Random rng = new Random();
@@ -185,7 +178,7 @@ public class ArrayListSorter {
      * @param arr
      * @param left
      * @param right
-     * @return
+     * @return middle index
      */
     private static <T extends Comparable<? super T>> int middlePivot(ArrayList<T> arr, int left, int right) {
         return left + ((right - left) / 2);
@@ -207,18 +200,19 @@ public class ArrayListSorter {
     /**
      * Insertion sort method for use when a list is below a certain size threshold
      * 
-     * @param <T>
-     * @param list
+     * @param arr
+     * @param left
+     * @param right
      */
-    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list, int left, int right) {
+    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> arr, int left, int right) {
         T temp;
         int j;
         for (int i = left + 1; i <= right; i++) {
-            temp = list.get(i);
+            temp = arr.get(i);
             j = i - 1;
-            while (j >= left && list.get(j).compareTo(temp) > 0) {
-                list.set(j + 1, list.get(j));
-                list.set(j--, temp);
+            while (j >= left && arr.get(j).compareTo(temp) > 0) {
+                arr.set(j + 1, arr.get(j));
+                arr.set(j--, temp);
             }
         }
     }
